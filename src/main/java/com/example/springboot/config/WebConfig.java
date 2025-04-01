@@ -5,21 +5,24 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import jakarta.validation.constraints.NotNull;
+
 @Configuration
 public class WebConfig {
-
     @Bean
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
             @Override
-            public void addCorsMappings(CorsRegistry registry) {
+            public void addCorsMappings(@NotNull CorsRegistry registry) {
                 registry.addMapping("/api/**")
-                        .allowedOrigins("http://localhost:5173") // ✅ Allow frontend origin
-                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-                        .allowCredentials(true) // ✅ Allow authentication cookies
+                        .allowedOrigins("http://localhost:5173",
+                                "http://localhost:5174",
+                                "http://localhost:5175",
+                                "http://localhost:5176",
+                                "https://quizit-9ahm.vercel.app/") // Allow React frontend, Allow vercal url
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH")
+                        .allowCredentials(true)// cookie
                         .allowedHeaders("*");
-
-                System.out.println("CORS Configuration Applied ✅");
             }
         };
     }
