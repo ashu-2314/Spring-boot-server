@@ -29,8 +29,8 @@ public class UserService {
     }
 
     // 2️⃣ **Login & Generate JWT**
-    public String loginUser(String email, String password) {
-        User user = userRepository.findByEmail(email)
+    public String loginUser(String username, String password) {
+        User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UserNotFoundException("Invalid credentials"));
 
         // Check if password matches
@@ -39,7 +39,7 @@ public class UserService {
         }
 
         // Generate JWT
-        return jwtUtil.generateToken(user.getEmail());
+        return jwtUtil.generateToken(user.getUsername());
     }
 
     // 3️⃣ **Get User from Token**
@@ -49,13 +49,13 @@ public class UserService {
         }
 
         // Extract and validate username from token
-        Optional<String> extractedEmail = jwtUtil.extractUsername(token);
-        if (extractedEmail.isEmpty()) {
+        Optional<String> extractedUsername = jwtUtil.extractUsername(token);
+        if (extractedUsername.isEmpty()) {
             throw new UserNotFoundException("Invalid or expired token.");
         }
 
         // Fetch user from the database
-        User user = userRepository.findByEmail(extractedEmail.get())
+        User user = userRepository.findByUsername(extractedUsername.get())
                 .orElseThrow(() -> new UserNotFoundException("User not found for token."));
 
         // Revalidate token against extracted email

@@ -31,9 +31,9 @@ public class JwtUtil {
     }
 
     // ✅ Generate JWT Token
-    public String generateToken(String email) {
+    public String generateToken(String username) {
         return Jwts.builder()
-                .subject(email)
+                .subject(username)
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .signWith(key)
@@ -46,9 +46,9 @@ public class JwtUtil {
     }
 
     // ✅ Validate JWT Token
-    public boolean validateToken(String token, String email) {
+    public boolean validateToken(String token, String username) {
         Claims claims = parseClaims(token);
-        return claims.getSubject().equals(email) && !isTokenExpired(claims);
+        return claims.getSubject().equals(username) && !isTokenExpired(claims);
     }
 
     // ✅ Check Token Expiration
