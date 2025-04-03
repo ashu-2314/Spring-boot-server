@@ -39,7 +39,7 @@ public class UserService {
         }
 
         // Generate JWT
-        return jwtUtil.generateToken(user.getUsername(), user.getRole());
+        return jwtUtil.generateToken(user.getUsername(),user.getRole());
     }
 
     // 3️⃣ **Get User from Token**
