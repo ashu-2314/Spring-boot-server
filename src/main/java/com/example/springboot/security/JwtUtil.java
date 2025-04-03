@@ -9,6 +9,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.Optional;
+import java.util.Map;
+import java.util.HashMap;
 import javax.crypto.SecretKey;
 
 @Component
@@ -30,19 +32,29 @@ public class JwtUtil {
         }
     }
 
-    // ✅ Generate JWT Token
-    public String generateToken(String username) {
+    // ✅ Generate JWT Token with Role
+    public String generateToken(String username, String role) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("role", role); // Include user role in JWT
+
         return Jwts.builder()
                 .subject(username)
+                .claims(claims)
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .signWith(key)
                 .compact();
     }
 
-    // ✅ Extract Email from JWT
+    // ✅ Extract Username (Email) from JWT
     public Optional<String> extractUsername(String token) {
         return Optional.ofNullable(parseClaims(token).getSubject());
+    }
+
+    // ✅ Extract User Role from JWT
+    public Optional<String> extractRole(String token) {
+        Claims claims = parseClaims(token);
+        return Optional.ofNullable(claims.get("role", String.class));
     }
 
     // ✅ Validate JWT Token
